@@ -20,7 +20,7 @@ obj.__index = obj
 
 -- Metadata
 obj.name = "DockClickToShowHide"
-obj.version = "1.0.0"
+obj.version = "1.0.1"
 obj.author = "tanakonkoatkaew"
 obj.homepage = "https://github.com/tanakonkoatkaew/MacOS-DockClickToShow-Hide.spoon"
 obj.license = "MIT - https://opensource.org/licenses/MIT"
@@ -34,6 +34,21 @@ obj.license = "MIT - https://opensource.org/licenses/MIT"
 --- * `"minimize"` — minimize each visible window instead. Every window gets
 ---   its own thumbnail on the right-hand side of the Dock.
 obj.action = "hide"
+
+--- DockClickToShowHide.maxHoldTime
+--- Variable
+--- Press and hold a Dock icon and macOS opens the icon's context menu. A press
+--- longer than this many seconds is treated as reaching for that menu, not as
+--- a click, and the app is left alone. Default 0.5.
+obj.maxHoldTime = 0.5
+
+--- DockClickToShowHide.hideDelay
+--- Variable
+--- Seconds to wait after the click before hiding. The mouse-up is handed to
+--- the Dock untouched, and hiding waits until the Dock has finished with it —
+--- at that moment the app is still frontmost and visible, so the Dock's own
+--- handling is a no-op. Default 0.12.
+obj.hideDelay = 0.12
 
 --- DockClickToShowHide.dragThreshold
 --- Variable
@@ -166,7 +181,7 @@ local function onEvent(e)
 		local action = obj:decide(loc)
 		if action == "hide" then
 			local front = hs.application.frontmostApplication()
-			pending = { app = front, x = loc.x, y = loc.y }
+			pending = { app = front, x = loc.x, y = loc.y, at = hs.timer.secondsSinceEpoch() }
 		end
 		return false
 	end
@@ -183,15 +198,22 @@ local function onEvent(e)
 		if movedTooFar(loc, cand) then return false end
 		if hasModifier(e) then return false end
 
-		-- The app may have quit while the button was held down.
-		local ok, unavailable = pcall(function()
-			return not cand.app:isRunning() or cand.app:isHidden()
-		end)
-		if not ok or unavailable then return false end
-		if not pcall(performAction, cand.app) then return false end
+		-- Held long enough that macOS is opening the Dock's context menu.
+		-- Leave the app alone; the menu is what the user is after.
+		if hs.timer.secondsSinceEpoch() - cand.at > obj.maxHoldTime then return false end
 
-		-- Swallow the mouse-up so the Dock does not immediately reactivate it.
-		return true
+		-- Never swallow the mouse-up. The Dock has to see the button come back
+		-- up, or it goes on believing it is still held and opens the context
+		-- menu on its own. Hide just after instead, once the Dock is done: the
+		-- app is still frontmost and visible while the Dock handles the click,
+		-- which for the frontmost app does nothing at all.
+		hs.timer.doAfter(obj.hideDelay, function()
+			local ok, unavailable = pcall(function()
+				return not cand.app:isRunning() or cand.app:isHidden()
+			end)
+			if ok and not unavailable then pcall(performAction, cand.app) end
+		end)
+		return false
 	end
 
 	return false

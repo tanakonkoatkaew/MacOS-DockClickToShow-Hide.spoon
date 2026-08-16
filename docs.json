@@ -11,7 +11,9 @@
     ],
     "Variable" : [
       {
+        "doc" : "What to do when you click the Dock icon of the active app.\n\n* `\"hide\"` (default) — hide the whole app. It collapses into its own Dock\n  icon, so the Dock stays tidy. Closest match to the Windows taskbar.\n* `\"minimize\"` — minimize each visible window instead. Every window gets\n  its own thumbnail on the right-hand side of the Dock.",
         "desc" : "What to do when you click the Dock icon of the active app.",
+        "def" : "DockClickToShowHide.action",
         "stripped_doc" : [
           "What to do when you click the Dock icon of the active app.",
           "",
@@ -20,10 +22,6 @@
           "* `\"minimize\"` — minimize each visible window instead. Every window gets",
           "  its own thumbnail on the right-hand side of the Dock."
         ],
-        "parameters" : [
-
-        ],
-        "doc" : "What to do when you click the Dock icon of the active app.\n\n* `\"hide\"` (default) — hide the whole app. It collapses into its own Dock\n  icon, so the Dock stays tidy. Closest match to the Windows taskbar.\n* `\"minimize\"` — minimize each visible window instead. Every window gets\n  its own thumbnail on the right-hand side of the Dock.",
         "notes" : [
 
         ],
@@ -32,20 +30,65 @@
         "returns" : [
 
         ],
-        "def" : "DockClickToShowHide.action",
-        "name" : "action"
+        "name" : "action",
+        "parameters" : [
+
+        ]
       },
       {
+        "doc" : "Press and hold a Dock icon and macOS opens the icon's context menu. A press\nlonger than this many seconds is treated as reaching for that menu, not as\na click, and the app is left alone. Default 0.5.",
+        "desc" : "Press and hold a Dock icon and macOS opens the icon's context menu. A press",
+        "def" : "DockClickToShowHide.maxHoldTime",
+        "stripped_doc" : [
+          "Press and hold a Dock icon and macOS opens the icon's context menu. A press",
+          "longer than this many seconds is treated as reaching for that menu, not as",
+          "a click, and the app is left alone. Default 0.5."
+        ],
+        "notes" : [
+
+        ],
+        "signature" : "DockClickToShowHide.maxHoldTime",
+        "type" : "Variable",
+        "returns" : [
+
+        ],
+        "name" : "maxHoldTime",
+        "parameters" : [
+
+        ]
+      },
+      {
+        "doc" : "Seconds to wait after the click before hiding. The mouse-up is handed to\nthe Dock untouched, and hiding waits until the Dock has finished with it —\nat that moment the app is still frontmost and visible, so the Dock's own\nhandling is a no-op. Default 0.12.",
+        "desc" : "Seconds to wait after the click before hiding. The mouse-up is handed to",
+        "def" : "DockClickToShowHide.hideDelay",
+        "stripped_doc" : [
+          "Seconds to wait after the click before hiding. The mouse-up is handed to",
+          "the Dock untouched, and hiding waits until the Dock has finished with it —",
+          "at that moment the app is still frontmost and visible, so the Dock's own",
+          "handling is a no-op. Default 0.12."
+        ],
+        "notes" : [
+
+        ],
+        "signature" : "DockClickToShowHide.hideDelay",
+        "type" : "Variable",
+        "returns" : [
+
+        ],
+        "name" : "hideDelay",
+        "parameters" : [
+
+        ]
+      },
+      {
+        "doc" : "How far the pointer may travel (in points) between mouse-down and mouse-up\nand still count as a click rather than a drag. Raise it if a shaky hand\nstops icons from hiding. Default 6.",
         "desc" : "How far the pointer may travel (in points) between mouse-down and mouse-up",
+        "def" : "DockClickToShowHide.dragThreshold",
         "stripped_doc" : [
           "How far the pointer may travel (in points) between mouse-down and mouse-up",
           "and still count as a click rather than a drag. Raise it if a shaky hand",
           "stops icons from hiding. Default 6."
         ],
-        "parameters" : [
-
-        ],
-        "doc" : "How far the pointer may travel (in points) between mouse-down and mouse-up\nand still count as a click rather than a drag. Raise it if a shaky hand\nstops icons from hiding. Default 6.",
         "notes" : [
 
         ],
@@ -54,11 +97,15 @@
         "returns" : [
 
         ],
-        "def" : "DockClickToShowHide.dragThreshold",
-        "name" : "dragThreshold"
+        "name" : "dragThreshold",
+        "parameters" : [
+
+        ]
       },
       {
+        "doc" : "Clicks farther than this (in points) from a screen edge skip the\naccessibility hit-test entirely, since the Dock always sits against an\nedge. This keeps the Spoon off the hot path of every other click on\nscreen: the hit-test costs ~5 ms, the edge check ~0.004 ms.\n\nRaise it if you run the Dock at a very large size with magnification and\nclicks stop registering. Default 160.",
         "desc" : "Clicks farther than this (in points) from a screen edge skip the",
+        "def" : "DockClickToShowHide.edgeMargin",
         "stripped_doc" : [
           "Clicks farther than this (in points) from a screen edge skip the",
           "accessibility hit-test entirely, since the Dock always sits against an",
@@ -68,10 +115,6 @@
           "Raise it if you run the Dock at a very large size with magnification and",
           "clicks stop registering. Default 160."
         ],
-        "parameters" : [
-
-        ],
-        "doc" : "Clicks farther than this (in points) from a screen edge skip the\naccessibility hit-test entirely, since the Dock always sits against an\nedge. This keeps the Spoon off the hot path of every other click on\nscreen: the hit-test costs ~5 ms, the edge check ~0.004 ms.\n\nRaise it if you run the Dock at a very large size with magnification and\nclicks stop registering. Default 160.",
         "notes" : [
 
         ],
@@ -80,8 +123,10 @@
         "returns" : [
 
         ],
-        "def" : "DockClickToShowHide.edgeMargin",
-        "name" : "edgeMargin"
+        "name" : "edgeMargin",
+        "parameters" : [
+
+        ]
       }
     ],
     "stripped_doc" : [
@@ -95,108 +140,18 @@
     "Constructor" : [
 
     ],
+    "doc" : "Click the Dock icon of the app you are already using, and it hides —\nlike clicking a taskbar button on Windows. Click it again and macOS\nbrings it back, which it already does natively.\n\nmacOS has no built-in setting for this: clicking the Dock icon of the\nfrontmost app does nothing. This Spoon adds the missing half.\n\nDragging Dock icons to reorder them keeps working: the Spoon lets every\nmouse-down through and only decides on mouse-up, after checking whether\nthe pointer actually moved.\n\nDownload: [https:\/\/github.com\/tanakonkoatkaew\/MacOS-DockClickToShow-Hide.spoon](https:\/\/github.com\/tanakonkoatkaew\/MacOS-DockClickToShow-Hide.spoon)",
     "Field" : [
 
-    ],
-    "Method" : [
-      {
-        "desc" : "Works out whether a click at `point` should hide the active app. Pure —",
-        "stripped_doc" : [
-          "Works out whether a click at `point` should hide the active app. Pure —",
-          "it changes nothing, so it is safe to call when debugging.",
-          ""
-        ],
-        "parameters" : [
-          " * point - A table with `x` and `y` in screen coordinates",
-          ""
-        ],
-        "doc" : "Works out whether a click at `point` should hide the active app. Pure —\nit changes nothing, so it is safe to call when debugging.\n\nParameters:\n * point - A table with `x` and `y` in screen coordinates\n\nReturns:\n * `\"hide\"` or `\"pass\"`\n * A short reason, handy in the Hammerspoon console\n * The name of the frontmost app, or nil",
-        "notes" : [
-
-        ],
-        "signature" : "DockClickToShowHide:decide(point) -> string, string, string",
-        "type" : "Method",
-        "returns" : [
-          " * `\"hide\"` or `\"pass\"`",
-          " * A short reason, handy in the Hammerspoon console",
-          " * The name of the frontmost app, or nil"
-        ],
-        "def" : "DockClickToShowHide:decide(point) -> string, string, string",
-        "name" : "decide"
-      },
-      {
-        "desc" : "Called by `hs.loadSpoon()`. Caches the screen frames used by the fast path.",
-        "stripped_doc" : [
-          "Called by `hs.loadSpoon()`. Caches the screen frames used by the fast path.",
-          ""
-        ],
-        "parameters" : [
-          " * None",
-          ""
-        ],
-        "doc" : "Called by `hs.loadSpoon()`. Caches the screen frames used by the fast path.\n\nParameters:\n * None\n\nReturns:\n * The DockClickToShowHide object",
-        "notes" : [
-
-        ],
-        "signature" : "DockClickToShowHide:init()",
-        "type" : "Method",
-        "returns" : [
-          " * The DockClickToShowHide object"
-        ],
-        "def" : "DockClickToShowHide:init()",
-        "name" : "init"
-      },
-      {
-        "desc" : "Starts watching for Dock clicks.",
-        "stripped_doc" : [
-          "Starts watching for Dock clicks.",
-          ""
-        ],
-        "parameters" : [
-          " * None",
-          ""
-        ],
-        "doc" : "Starts watching for Dock clicks.\n\nParameters:\n * None\n\nReturns:\n * The DockClickToShowHide object",
-        "notes" : [
-
-        ],
-        "signature" : "DockClickToShowHide:start()",
-        "type" : "Method",
-        "returns" : [
-          " * The DockClickToShowHide object"
-        ],
-        "def" : "DockClickToShowHide:start()",
-        "name" : "start"
-      },
-      {
-        "desc" : "Stops watching. Dock clicks go back to their stock macOS behaviour.",
-        "stripped_doc" : [
-          "Stops watching. Dock clicks go back to their stock macOS behaviour.",
-          ""
-        ],
-        "parameters" : [
-          " * None",
-          ""
-        ],
-        "doc" : "Stops watching. Dock clicks go back to their stock macOS behaviour.\n\nParameters:\n * None\n\nReturns:\n * The DockClickToShowHide object",
-        "notes" : [
-
-        ],
-        "signature" : "DockClickToShowHide:stop()",
-        "type" : "Method",
-        "returns" : [
-          " * The DockClickToShowHide object"
-        ],
-        "def" : "DockClickToShowHide:stop()",
-        "name" : "stop"
-      }
     ],
     "Command" : [
 
     ],
     "items" : [
       {
+        "doc" : "What to do when you click the Dock icon of the active app.\n\n* `\"hide\"` (default) — hide the whole app. It collapses into its own Dock\n  icon, so the Dock stays tidy. Closest match to the Windows taskbar.\n* `\"minimize\"` — minimize each visible window instead. Every window gets\n  its own thumbnail on the right-hand side of the Dock.",
         "desc" : "What to do when you click the Dock icon of the active app.",
+        "def" : "DockClickToShowHide.action",
         "stripped_doc" : [
           "What to do when you click the Dock icon of the active app.",
           "",
@@ -205,10 +160,6 @@
           "* `\"minimize\"` — minimize each visible window instead. Every window gets",
           "  its own thumbnail on the right-hand side of the Dock."
         ],
-        "parameters" : [
-
-        ],
-        "doc" : "What to do when you click the Dock icon of the active app.\n\n* `\"hide\"` (default) — hide the whole app. It collapses into its own Dock\n  icon, so the Dock stays tidy. Closest match to the Windows taskbar.\n* `\"minimize\"` — minimize each visible window instead. Every window gets\n  its own thumbnail on the right-hand side of the Dock.",
         "notes" : [
 
         ],
@@ -217,20 +168,20 @@
         "returns" : [
 
         ],
-        "def" : "DockClickToShowHide.action",
-        "name" : "action"
+        "name" : "action",
+        "parameters" : [
+
+        ]
       },
       {
+        "doc" : "How far the pointer may travel (in points) between mouse-down and mouse-up\nand still count as a click rather than a drag. Raise it if a shaky hand\nstops icons from hiding. Default 6.",
         "desc" : "How far the pointer may travel (in points) between mouse-down and mouse-up",
+        "def" : "DockClickToShowHide.dragThreshold",
         "stripped_doc" : [
           "How far the pointer may travel (in points) between mouse-down and mouse-up",
           "and still count as a click rather than a drag. Raise it if a shaky hand",
           "stops icons from hiding. Default 6."
         ],
-        "parameters" : [
-
-        ],
-        "doc" : "How far the pointer may travel (in points) between mouse-down and mouse-up\nand still count as a click rather than a drag. Raise it if a shaky hand\nstops icons from hiding. Default 6.",
         "notes" : [
 
         ],
@@ -239,11 +190,15 @@
         "returns" : [
 
         ],
-        "def" : "DockClickToShowHide.dragThreshold",
-        "name" : "dragThreshold"
+        "name" : "dragThreshold",
+        "parameters" : [
+
+        ]
       },
       {
+        "doc" : "Clicks farther than this (in points) from a screen edge skip the\naccessibility hit-test entirely, since the Dock always sits against an\nedge. This keeps the Spoon off the hot path of every other click on\nscreen: the hit-test costs ~5 ms, the edge check ~0.004 ms.\n\nRaise it if you run the Dock at a very large size with magnification and\nclicks stop registering. Default 160.",
         "desc" : "Clicks farther than this (in points) from a screen edge skip the",
+        "def" : "DockClickToShowHide.edgeMargin",
         "stripped_doc" : [
           "Clicks farther than this (in points) from a screen edge skip the",
           "accessibility hit-test entirely, since the Dock always sits against an",
@@ -253,10 +208,6 @@
           "Raise it if you run the Dock at a very large size with magnification and",
           "clicks stop registering. Default 160."
         ],
-        "parameters" : [
-
-        ],
-        "doc" : "Clicks farther than this (in points) from a screen edge skip the\naccessibility hit-test entirely, since the Dock always sits against an\nedge. This keeps the Spoon off the hot path of every other click on\nscreen: the hit-test costs ~5 ms, the edge check ~0.004 ms.\n\nRaise it if you run the Dock at a very large size with magnification and\nclicks stop registering. Default 160.",
         "notes" : [
 
         ],
@@ -265,21 +216,65 @@
         "returns" : [
 
         ],
-        "def" : "DockClickToShowHide.edgeMargin",
-        "name" : "edgeMargin"
+        "name" : "edgeMargin",
+        "parameters" : [
+
+        ]
       },
       {
+        "doc" : "Seconds to wait after the click before hiding. The mouse-up is handed to\nthe Dock untouched, and hiding waits until the Dock has finished with it —\nat that moment the app is still frontmost and visible, so the Dock's own\nhandling is a no-op. Default 0.12.",
+        "desc" : "Seconds to wait after the click before hiding. The mouse-up is handed to",
+        "def" : "DockClickToShowHide.hideDelay",
+        "stripped_doc" : [
+          "Seconds to wait after the click before hiding. The mouse-up is handed to",
+          "the Dock untouched, and hiding waits until the Dock has finished with it —",
+          "at that moment the app is still frontmost and visible, so the Dock's own",
+          "handling is a no-op. Default 0.12."
+        ],
+        "notes" : [
+
+        ],
+        "signature" : "DockClickToShowHide.hideDelay",
+        "type" : "Variable",
+        "returns" : [
+
+        ],
+        "name" : "hideDelay",
+        "parameters" : [
+
+        ]
+      },
+      {
+        "doc" : "Press and hold a Dock icon and macOS opens the icon's context menu. A press\nlonger than this many seconds is treated as reaching for that menu, not as\na click, and the app is left alone. Default 0.5.",
+        "desc" : "Press and hold a Dock icon and macOS opens the icon's context menu. A press",
+        "def" : "DockClickToShowHide.maxHoldTime",
+        "stripped_doc" : [
+          "Press and hold a Dock icon and macOS opens the icon's context menu. A press",
+          "longer than this many seconds is treated as reaching for that menu, not as",
+          "a click, and the app is left alone. Default 0.5."
+        ],
+        "notes" : [
+
+        ],
+        "signature" : "DockClickToShowHide.maxHoldTime",
+        "type" : "Variable",
+        "returns" : [
+
+        ],
+        "name" : "maxHoldTime",
+        "parameters" : [
+
+        ]
+      },
+      {
+        "doc" : "Works out whether a click at `point` should hide the active app. Pure —\nit changes nothing, so it is safe to call when debugging.\n\nParameters:\n * point - A table with `x` and `y` in screen coordinates\n\nReturns:\n * `\"hide\"` or `\"pass\"`\n * A short reason, handy in the Hammerspoon console\n * The name of the frontmost app, or nil",
         "desc" : "Works out whether a click at `point` should hide the active app. Pure —",
+        "def" : "DockClickToShowHide:decide(point) -> string, string, string",
         "stripped_doc" : [
           "Works out whether a click at `point` should hide the active app. Pure —",
           "it changes nothing, so it is safe to call when debugging.",
           ""
         ],
-        "parameters" : [
-          " * point - A table with `x` and `y` in screen coordinates",
-          ""
-        ],
-        "doc" : "Works out whether a click at `point` should hide the active app. Pure —\nit changes nothing, so it is safe to call when debugging.\n\nParameters:\n * point - A table with `x` and `y` in screen coordinates\n\nReturns:\n * `\"hide\"` or `\"pass\"`\n * A short reason, handy in the Hammerspoon console\n * The name of the frontmost app, or nil",
         "notes" : [
 
         ],
@@ -290,20 +285,20 @@
           " * A short reason, handy in the Hammerspoon console",
           " * The name of the frontmost app, or nil"
         ],
-        "def" : "DockClickToShowHide:decide(point) -> string, string, string",
-        "name" : "decide"
+        "name" : "decide",
+        "parameters" : [
+          " * point - A table with `x` and `y` in screen coordinates",
+          ""
+        ]
       },
       {
+        "doc" : "Called by `hs.loadSpoon()`. Caches the screen frames used by the fast path.\n\nParameters:\n * None\n\nReturns:\n * The DockClickToShowHide object",
         "desc" : "Called by `hs.loadSpoon()`. Caches the screen frames used by the fast path.",
+        "def" : "DockClickToShowHide:init()",
         "stripped_doc" : [
           "Called by `hs.loadSpoon()`. Caches the screen frames used by the fast path.",
           ""
         ],
-        "parameters" : [
-          " * None",
-          ""
-        ],
-        "doc" : "Called by `hs.loadSpoon()`. Caches the screen frames used by the fast path.\n\nParameters:\n * None\n\nReturns:\n * The DockClickToShowHide object",
         "notes" : [
 
         ],
@@ -312,20 +307,20 @@
         "returns" : [
           " * The DockClickToShowHide object"
         ],
-        "def" : "DockClickToShowHide:init()",
-        "name" : "init"
+        "name" : "init",
+        "parameters" : [
+          " * None",
+          ""
+        ]
       },
       {
+        "doc" : "Starts watching for Dock clicks.\n\nParameters:\n * None\n\nReturns:\n * The DockClickToShowHide object",
         "desc" : "Starts watching for Dock clicks.",
+        "def" : "DockClickToShowHide:start()",
         "stripped_doc" : [
           "Starts watching for Dock clicks.",
           ""
         ],
-        "parameters" : [
-          " * None",
-          ""
-        ],
-        "doc" : "Starts watching for Dock clicks.\n\nParameters:\n * None\n\nReturns:\n * The DockClickToShowHide object",
         "notes" : [
 
         ],
@@ -334,20 +329,20 @@
         "returns" : [
           " * The DockClickToShowHide object"
         ],
-        "def" : "DockClickToShowHide:start()",
-        "name" : "start"
+        "name" : "start",
+        "parameters" : [
+          " * None",
+          ""
+        ]
       },
       {
+        "doc" : "Stops watching. Dock clicks go back to their stock macOS behaviour.\n\nParameters:\n * None\n\nReturns:\n * The DockClickToShowHide object",
         "desc" : "Stops watching. Dock clicks go back to their stock macOS behaviour.",
+        "def" : "DockClickToShowHide:stop()",
         "stripped_doc" : [
           "Stops watching. Dock clicks go back to their stock macOS behaviour.",
           ""
         ],
-        "parameters" : [
-          " * None",
-          ""
-        ],
-        "doc" : "Stops watching. Dock clicks go back to their stock macOS behaviour.\n\nParameters:\n * None\n\nReturns:\n * The DockClickToShowHide object",
         "notes" : [
 
         ],
@@ -356,11 +351,106 @@
         "returns" : [
           " * The DockClickToShowHide object"
         ],
-        "def" : "DockClickToShowHide:stop()",
-        "name" : "stop"
+        "name" : "stop",
+        "parameters" : [
+          " * None",
+          ""
+        ]
       }
     ],
-    "doc" : "Click the Dock icon of the app you are already using, and it hides —\nlike clicking a taskbar button on Windows. Click it again and macOS\nbrings it back, which it already does natively.\n\nmacOS has no built-in setting for this: clicking the Dock icon of the\nfrontmost app does nothing. This Spoon adds the missing half.\n\nDragging Dock icons to reorder them keeps working: the Spoon lets every\nmouse-down through and only decides on mouse-up, after checking whether\nthe pointer actually moved.\n\nDownload: [https:\/\/github.com\/tanakonkoatkaew\/MacOS-DockClickToShow-Hide.spoon](https:\/\/github.com\/tanakonkoatkaew\/MacOS-DockClickToShow-Hide.spoon)",
+    "Method" : [
+      {
+        "doc" : "Works out whether a click at `point` should hide the active app. Pure —\nit changes nothing, so it is safe to call when debugging.\n\nParameters:\n * point - A table with `x` and `y` in screen coordinates\n\nReturns:\n * `\"hide\"` or `\"pass\"`\n * A short reason, handy in the Hammerspoon console\n * The name of the frontmost app, or nil",
+        "desc" : "Works out whether a click at `point` should hide the active app. Pure —",
+        "def" : "DockClickToShowHide:decide(point) -> string, string, string",
+        "stripped_doc" : [
+          "Works out whether a click at `point` should hide the active app. Pure —",
+          "it changes nothing, so it is safe to call when debugging.",
+          ""
+        ],
+        "notes" : [
+
+        ],
+        "signature" : "DockClickToShowHide:decide(point) -> string, string, string",
+        "type" : "Method",
+        "returns" : [
+          " * `\"hide\"` or `\"pass\"`",
+          " * A short reason, handy in the Hammerspoon console",
+          " * The name of the frontmost app, or nil"
+        ],
+        "name" : "decide",
+        "parameters" : [
+          " * point - A table with `x` and `y` in screen coordinates",
+          ""
+        ]
+      },
+      {
+        "doc" : "Called by `hs.loadSpoon()`. Caches the screen frames used by the fast path.\n\nParameters:\n * None\n\nReturns:\n * The DockClickToShowHide object",
+        "desc" : "Called by `hs.loadSpoon()`. Caches the screen frames used by the fast path.",
+        "def" : "DockClickToShowHide:init()",
+        "stripped_doc" : [
+          "Called by `hs.loadSpoon()`. Caches the screen frames used by the fast path.",
+          ""
+        ],
+        "notes" : [
+
+        ],
+        "signature" : "DockClickToShowHide:init()",
+        "type" : "Method",
+        "returns" : [
+          " * The DockClickToShowHide object"
+        ],
+        "name" : "init",
+        "parameters" : [
+          " * None",
+          ""
+        ]
+      },
+      {
+        "doc" : "Starts watching for Dock clicks.\n\nParameters:\n * None\n\nReturns:\n * The DockClickToShowHide object",
+        "desc" : "Starts watching for Dock clicks.",
+        "def" : "DockClickToShowHide:start()",
+        "stripped_doc" : [
+          "Starts watching for Dock clicks.",
+          ""
+        ],
+        "notes" : [
+
+        ],
+        "signature" : "DockClickToShowHide:start()",
+        "type" : "Method",
+        "returns" : [
+          " * The DockClickToShowHide object"
+        ],
+        "name" : "start",
+        "parameters" : [
+          " * None",
+          ""
+        ]
+      },
+      {
+        "doc" : "Stops watching. Dock clicks go back to their stock macOS behaviour.\n\nParameters:\n * None\n\nReturns:\n * The DockClickToShowHide object",
+        "desc" : "Stops watching. Dock clicks go back to their stock macOS behaviour.",
+        "def" : "DockClickToShowHide:stop()",
+        "stripped_doc" : [
+          "Stops watching. Dock clicks go back to their stock macOS behaviour.",
+          ""
+        ],
+        "notes" : [
+
+        ],
+        "signature" : "DockClickToShowHide:stop()",
+        "type" : "Method",
+        "returns" : [
+          " * The DockClickToShowHide object"
+        ],
+        "name" : "stop",
+        "parameters" : [
+          " * None",
+          ""
+        ]
+      }
+    ],
     "name" : "DockClickToShowHide"
   }
 ]

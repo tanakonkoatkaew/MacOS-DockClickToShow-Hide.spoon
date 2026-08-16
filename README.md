@@ -69,6 +69,15 @@ spoon.DockClickToShowHide.dragThreshold = 6
 -- registering. Default 160.
 spoon.DockClickToShowHide.edgeMargin = 160
 
+-- Hold a Dock icon longer than this many seconds and macOS opens the icon's
+-- context menu, so the press is left alone rather than hiding the app.
+-- Default 0.5.
+spoon.DockClickToShowHide.maxHoldTime = 0.5
+
+-- Seconds to wait after the click before hiding, so the Dock finishes
+-- handling the click first. Default 0.12.
+spoon.DockClickToShowHide.hideDelay = 0.12
+
 spoon.DockClickToShowHide:start()
 ```
 
@@ -95,6 +104,8 @@ app's icon:
   if the pointer stayed put.
 - **⌘-click** (Show in Finder), and ⌥ / ⌃ / ⇧ clicks.
 - **Icons of apps that are not frontmost** — those behave normally.
+- **Press and hold**, which opens the icon's context menu. Holding longer than
+  `maxHoldTime` counts as reaching for that menu, not as a click.
 - **Apps with no visible windows**, and apps that are already hidden, so the
   Dock can bring them back the usual way.
 
@@ -106,9 +117,12 @@ always against a screen edge, so clicks farther away than `edgeMargin` are
 dropped by a cheap bounds check first — 0.004 ms, roughly 1,400× faster — and
 the hit-test only runs near an edge.
 
-When the click does land on the frontmost app's Dock icon, the mouse-up is
-swallowed. Otherwise the Dock would see a click on a freshly hidden app and
-immediately bring it back.
+The mouse-up is handed to the Dock untouched. Swallowing it looks tempting —
+it stops the Dock from reactivating the app you just hid — but the Dock then
+never learns the button came back up, keeps believing it is held, and opens
+the context menu on its own. Hiding is delayed by `hideDelay` instead: while
+the Dock is handling the click the app is still frontmost and visible, and
+clicking the frontmost app's icon is a no-op in macOS.
 
 One implementation note worth writing down: a Dock item's `AXURL` is not a
 string. It arrives as an NSURL table, `{ filePath = ..., url = ... }`, so
@@ -174,9 +188,13 @@ spoon.DockClickToShowHide:start()
 - `edgeMargin` — คลิกที่ห่างจากขอบจอเกินค่านี้จะข้ามการตรวจ Dock ไปเลย
   (ค่าเริ่มต้น 160) ถ้าเปิด Dock ใหญ่มากพร้อม magnification แล้วคลิกไม่ติด
   ให้เพิ่มค่านี้
+- `maxHoldTime` — กดค้างนานเกินกี่วินาทีถือว่ากำลังจะเปิดเมนู ไม่ใช่คลิก
+  แล้วจะไม่ซ่อนแอปให้ (ค่าเริ่มต้น 0.5)
+- `hideDelay` — หน่วงกี่วินาทีก่อนซ่อน เพื่อให้ Dock จัดการคลิกเสร็จก่อน
+  (ค่าเริ่มต้น 0.12)
 
 ### สิ่งที่ Spoon นี้ไม่ยุ่งด้วย
 
 ลากจัดเรียงไอคอน, `⌘`+คลิก (Show in Finder), `⌥` `⌃` `⇧`+คลิก,
-ไอคอนของแอปที่ไม่ได้ active, แอปที่ไม่มีหน้าต่างเปิดอยู่ และแอปที่ซ่อนอยู่แล้ว
-— ทั้งหมดนี้ทำงานตามปกติของ macOS
+การกดค้างเพื่อเปิดเมนู, ไอคอนของแอปที่ไม่ได้ active, แอปที่ไม่มีหน้าต่างเปิดอยู่
+และแอปที่ซ่อนอยู่แล้ว — ทั้งหมดนี้ทำงานตามปกติของ macOS
