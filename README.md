@@ -20,6 +20,15 @@ away. This Spoon adds the missing half, and nothing else.
 
 ## Install
 
+### Download the Spoon (easiest)
+
+1. Grab **[DockClickToShowHide.spoon.zip](https://github.com/tanakonkoatkaew/MacOS-DockClickToShow-Hide.spoon/releases/latest/download/DockClickToShowHide.spoon.zip)**
+   from the [latest release](https://github.com/tanakonkoatkaew/MacOS-DockClickToShow-Hide.spoon/releases/latest).
+2. Unzip it, then double-click `DockClickToShowHide.spoon`. Hammerspoon
+   installs it into `~/.hammerspoon/Spoons/` for you.
+
+### Or clone it
+
 The directory name has to be `DockClickToShowHide.spoon` — that is the name
 Hammerspoon loads the Spoon by, and it is not the same as the repository name:
 
@@ -28,7 +37,9 @@ git clone https://github.com/tanakonkoatkaew/MacOS-DockClickToShow-Hide.spoon.gi
   ~/.hammerspoon/Spoons/DockClickToShowHide.spoon
 ```
 
-Then in `~/.hammerspoon/init.lua`:
+### Then load it
+
+In `~/.hammerspoon/init.lua`:
 
 ```lua
 hs.loadSpoon("DockClickToShowHide")
@@ -133,8 +144,14 @@ Dock เลยเป็นทางเดียว คือเรียกแ�
 
 ### ติดตั้ง
 
-ชื่อโฟลเดอร์ต้องเป็น `DockClickToShowHide.spoon` เท่านั้น เพราะเป็นชื่อที่
-Hammerspoon ใช้โหลด และไม่ตรงกับชื่อ repo:
+**วิธีง่ายสุด** โหลด
+[DockClickToShowHide.spoon.zip](https://github.com/tanakonkoatkaew/MacOS-DockClickToShow-Hide.spoon/releases/latest/download/DockClickToShowHide.spoon.zip)
+จาก [release ล่าสุด](https://github.com/tanakonkoatkaew/MacOS-DockClickToShow-Hide.spoon/releases/latest)
+แตกไฟล์แล้วดับเบิลคลิก `DockClickToShowHide.spoon` — Hammerspoon จะติดตั้งลง
+`~/.hammerspoon/Spoons/` ให้เอง
+
+**หรือ clone เอง** ชื่อโฟลเดอร์ต้องเป็น `DockClickToShowHide.spoon` เท่านั้น
+เพราะเป็นชื่อที่ Hammerspoon ใช้โหลด และไม่ตรงกับชื่อ repo:
 
 ```sh
 git clone https://github.com/tanakonkoatkaew/MacOS-DockClickToShow-Hide.spoon.git \
